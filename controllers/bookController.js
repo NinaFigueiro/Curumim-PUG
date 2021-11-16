@@ -1,89 +1,104 @@
-const fs = require('fs');
+const Book = require('./../models/bookModel');
 
-const books = JSON.parse(
-    fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
-    );
-// Param middleware
-exports.checkID = (req, res, next, val) => {
-    console.log(`Book id is ${val}`);
+exports.getAllBooks = async (req, res) => {
+   try {
+        // BUILD QUERY
+        const queryObj = { ...req.query };
+        const excludedFields = ['page', 'sort', 'limit', 'fields'];
+        excludedFields.forEach(el => delete queryObj[el]);
 
-    if(req.params.id * 1 > books.length) {
-        return res.status(404).json({
-            status: 'fail',
-            message:'invalid ID'
+        const query = Book.find(queryObj);
+        // const query = Book.find()
+        //     .where('status')
+        //     .equals('available');
+
+        // EXECUTE QUERY
+        const books = await query;
+
+        // SEND RESPONSE
+        res.status(200).json({
+            status: 'success',
+            results: books.length,
+            data: {
+                books
+            }
         });
-    }
-    next();
-};
-
-exports.checkBoby = (req, res, next) => {
-    if(!req.body.name || !req.body.price) {
-        return res.status(400).json({
+    } catch(err) {
+          res.status(404).json({
             status: 'fail',
-            message: 'Missinf name or price'
-        })
+             message: err.message
+         });
     }
-    next();
-}
-
-exports.getAllBooks = (req, res) => {
-    console.log(req.requestTime);
-
-    res.status(200).json({
-        status: 'success',
-        requestedAt: req.requestTime,
-        results: books.length,
-        data: {
-            books
-        }
-    });
 };
 
-exports.getBook = (req, res) => {    
-    const id = req.params.id * 1;
-    const book = books.find(el => el.id === id);
-
-    res.status(200).json({
-        status: 'success',
-        data: {
-            book
-        }
-    });
+exports.getBook = async (req, res) => {    
+    try {
+        const book = await Book.findById(req.params.id);
+        // const book = await Book.findOne({ _id: req.params.id });
+        res.status(200).json({
+            status: 'success',
+            data: {
+                book
+            }
+        });
+    } catch(err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err.message
+        });
+    }  
 };
 
-exports.createBook = (req, res) => {
-    // console.log(req.body);
-    // the newId is the id of the last element in the books array +1
-    const newId = books[books.length -1].id + 1;
-    const newBook = Object.assign({id: newId}, req.body);
+exports.createBook = async (req, res) => {
+    try {
+        const newBook = await Book.create(req.body);
 
-    books.push(newBook);
-    fs.writeFile(
-        `${__dirname}/dev-data/data/tours-simple.json`, 
-        JSON.stringify(books), 
-        err => {
         res.status(201).json({
             status: 'success',
             data: {
                 book: newBook
             }
         });
-        }
-    );
+    } catch(err) {
+        res.status(400).json({
+            status: 'fail',
+            message: err.message
+        });
+    }
+    
 };
 
-exports.updateBook = (req, res) => {
-    res.status(200).json({
-        status: 'success',
-        data: {
-            book: '<Updated tour here...>'
-        }
-    })
+exports.updateBook = async (req, res) => {
+    try{
+        const book = await Book.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        })
+        res.status(200).json({
+            status: 'success',
+            data: {
+                book
+            }
+        });
+    } catch(err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err.message
+        });
+    }
 };
 
-exports.deleteBook = (req, res) => {
-    res.status(204).json({
-        status: 'success',
-        data: null
-    })
+exports.deleteBook = async (req, res) => {
+    try{
+        await Book.findByIdAndDelete(req.params.id);
+        res.status(204).json({
+            status: 'success',
+            data: null
+        });
+    } catch(err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err.message
+        });
+    }
 };
