@@ -1,19 +1,72 @@
 const Book = require('./../models/bookModel');
+const APIFeatures = require('./../utils/apiFeatures');
+
+exports.aliasBooksAvailable = (req, res, next) => {
+    req.query.status = 'available';
+    // req.query.sort = 'name';
+    req.query.fields = 'name,author,img,status';
+
+    next();
+};
+
+exports.aliasBooksReserved = (req, res, next) => {
+    req.query.status = 'reserved';
+    // req.query.sort = 'name';
+    req.query.fields = 'name,author,img,status';
+
+    next();
+};
+
+exports.aliasBooksBorrowed= (req, res, next) => {
+    req.query.status = 'borrowed';
+    // req.query.sort = 'name';
+    req.query.fields = 'name,author,img,status';
+
+    next();
+};
+
+exports.getMeetingsPerMonth = async (req, res) => {
+    try{
+        const year = req.params.year * 1;
+
+        const month = req.params.month;
+
+        const plan = await Book.aggregate([
+            {
+                $match: {
+                    date: {
+                        $gte: new Date(`${year}-${month}-01`),
+                        $lte: new Date(`${year}-${month}-31`),
+                    }
+                }
+            }
+        ]);
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                plan
+            }
+        });
+
+    }  catch(err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err.message
+        });
+    }
+};
 
 exports.getAllBooks = async (req, res) => {
+req.query.sort = 'name';
    try {
-        // BUILD QUERY
-        const queryObj = { ...req.query };
-        const excludedFields = ['page', 'sort', 'limit', 'fields'];
-        excludedFields.forEach(el => delete queryObj[el]);
-
-        const query = Book.find(queryObj);
-        // const query = Book.find()
-        //     .where('status')
-        //     .equals('available');
-
         // EXECUTE QUERY
-        const books = await query;
+        const features = new APIFeatures(Book.find(), req.query)
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate(0);
+        const books = await features.query;
 
         // SEND RESPONSE
         res.status(200).json({
@@ -102,3 +155,4 @@ exports.deleteBook = async (req, res) => {
         });
     }
 };
+

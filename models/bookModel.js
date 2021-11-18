@@ -16,7 +16,12 @@ const bookSchema = new mongoose.Schema({
         type: String
     },
     status: {
-        type: String
+        type: String,
+        enum: {
+            values: ['available', 'reserved', 'borrowed'],
+            message: 'Status is either available, reserved or borrowed'
+        }
+
     },
     reservations: Number,
     createdAt: {
@@ -30,8 +35,26 @@ const bookSchema = new mongoose.Schema({
     description: {
         type: String,
         trim: true
-    }
+    },
+    date: Date
 });
+
+// bookSchema.pre(/^find/, function(next) {
+//   console.log(this)
+
+//   next();
+// });
+// bookSchema.pre(/^find/, function(next) {
+//     this.find().sort(date)
+
+//   next();
+// })
+
+// bookSchema.pre('aggregate', function(next) {
+//     this.pipeline().unshift({ $sort: {name: 1} })
+//     console.log(this.pipeline());
+//     next();
+// })
 
 const Book = mongoose.model('Book', bookSchema);
 
