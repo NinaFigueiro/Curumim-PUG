@@ -1,5 +1,7 @@
 const Book = require('./../models/bookModel');
 const APIFeatures = require('./../utils/apiFeatures');
+const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
 
 exports.aliasBooksAvailable = (req, res, next) => {
     req.query.status = 'available';
@@ -25,12 +27,9 @@ exports.aliasBooksBorrowed= (req, res, next) => {
     next();
 };
 
-exports.getMeetingsPerMonth = async (req, res) => {
-    try{
+exports.getMeetingsPerMonth = catchAsync(async (req, res, next) => {
         const year = req.params.year * 1;
-
         const month = req.params.month;
-
         const plan = await Book.aggregate([
             {
                 $match: {
@@ -48,18 +47,10 @@ exports.getMeetingsPerMonth = async (req, res) => {
                 plan
             }
         });
+});
 
-    }  catch(err) {
-        res.status(404).json({
-            status: 'fail',
-            message: err.message
-        });
-    }
-};
-
-exports.getAllBooks = async (req, res) => {
+exports.getAllBooks = catchAsync(async (req, res, next) => {
 req.query.sort = 'name';
-   try {
         // EXECUTE QUERY
         const features = new APIFeatures(Book.find(), req.query)
         .filter()
@@ -76,83 +67,61 @@ req.query.sort = 'name';
                 books
             }
         });
-    } catch(err) {
-          res.status(404).json({
-            status: 'fail',
-             message: err.message
-         });
-    }
-};
+});
 
-exports.getBook = async (req, res) => {    
-    try {
+exports.getBook = catchAsync(async (req, res, next) => {    
         const book = await Book.findById(req.params.id);
         // const book = await Book.findOne({ _id: req.params.id });
+        if(!book) {
+            return next(new AppError('No book found with that ID', 404))
+        }
         res.status(200).json({
             status: 'success',
             data: {
                 book
             }
-        });
-    } catch(err) {
-        res.status(404).json({
-            status: 'fail',
-            message: err.message
-        });
-    }  
-};
+        }); 
+});
 
-exports.createBook = async (req, res) => {
-    try {
-        const newBook = await Book.create(req.body);
+exports.createBook = catchAsync(async (req, res, next) => {
+    const newBook = await Book.create(req.body);
 
-        res.status(201).json({
-            status: 'success',
-            data: {
-                book: newBook
-            }
-        });
-    } catch(err) {
-        res.status(400).json({
-            status: 'fail',
-            message: err.message
-        });
-    }
-    
-};
+    res.status(201).json({
+        status: 'success',
+        data: {
+            book: newBook
+        }
+    });    
+});
 
-exports.updateBook = async (req, res) => {
-    try{
+exports.updateBook = catchAsync(async (req, res, next) => {
         const book = await Book.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
-        })
+        });
+
+        if(!book) {
+            return next(new AppError('No book found with that ID', 404))
+        }
+
         res.status(200).json({
             status: 'success',
             data: {
                 book
             }
         });
-    } catch(err) {
-        res.status(404).json({
-            status: 'fail',
-            message: err.message
-        });
-    }
-};
+});
 
-exports.deleteBook = async (req, res) => {
-    try{
-        await Book.findByIdAndDelete(req.params.id);
+exports.deleteBook = catchAsync(async (req, res, next) => {
+        const book = await Book.findByIdAndDelete(req.params.id);
+
+        if(!book) {
+            return next(new AppError('No book found with that ID', 404))
+        }
+
         res.status(204).json({
             status: 'success',
             data: null
         });
-    } catch(err) {
-        res.status(404).json({
-            status: 'fail',
-            message: err.message
-        });
-    }
-};
+});
 
