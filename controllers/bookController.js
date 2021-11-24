@@ -50,7 +50,7 @@ exports.getMeetingsPerMonth = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
-req.query.sort = 'name';
+// req.query.sort = 'name';
         // EXECUTE QUERY
         const features = new APIFeatures(Book.find(), req.query)
         .filter()
