@@ -2,6 +2,15 @@ const Book = require('./../models/bookModel');
 const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const factory = require('./../controllers/handlerFactory');
+
+// ONLY IF USING HANDLER FACTORY
+// exports.getBook = factory.getOne(Book, { path: 'reservations', select:'-__v' });
+// exports.getAllBooks = factory.getAll(Book);
+// exports.createBook = factory.createOne(Book);
+// exports.updateBook = factory.updateOne(Book);
+// exports.deleteBook = factory.deleteOne(Book);
+// 
 
 exports.aliasBooksAvailable = (req, res, next) => {
     req.query.status = 'available';
@@ -27,30 +36,8 @@ exports.aliasBooksBorrowed= (req, res, next) => {
     next();
 };
 
-exports.getMeetingsPerMonth = catchAsync(async (req, res, next) => {
-        const year = req.params.year * 1;
-        const month = req.params.month;
-        const plan = await Book.aggregate([
-            {
-                $match: {
-                    date: {
-                        $gte: new Date(`${year}-${month}-01`),
-                        $lte: new Date(`${year}-${month}-31`),
-                    }
-                }
-            }
-        ]);
-
-        res.status(200).json({
-            status: 'success',
-            data: {
-                plan
-            }
-        });
-});
-
 exports.getAllBooks = catchAsync(async (req, res, next) => {
-// req.query.sort = 'name';
+    if(!req.query.sort) req.query.sort = 'name';
         // EXECUTE QUERY
         const features = new APIFeatures(Book.find(), req.query)
         .filter()
@@ -69,8 +56,14 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
         });
 });
 
+// PROTECTED RESTRICTED
+
 exports.getBook = catchAsync(async (req, res, next) => {    
-        const book = await Book.findById(req.params.id);
+        const book = await Book.findById(req.params.id).populate({
+            path: 'reservations',
+            select: '-__v'
+        });
+        // const book = await Book.findById(req.params.id);
         // const book = await Book.findOne({ _id: req.params.id });
         if(!book) {
             return next(new AppError('No book found with that ID', 404))

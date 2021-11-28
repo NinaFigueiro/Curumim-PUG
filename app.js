@@ -11,6 +11,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const bookRouter = require('./routes/bookRoutes');
 const userRouter = require('./routes/userRoutes');
+const reservationRouter = require('./routes/reservationRoutes');
 
 const app = express();
 
@@ -58,13 +59,14 @@ app.use(express.static(`${__dirname}/public`));
 // Test middleware
 app.use((req, res, next) => {
     req.requestTime = new Date().toISOString();
-    console.log(req.headers);
+    // console.log(req.headers);
 
     next();
 })
 
 //  3) ROUTES
 app.use('/api/v1/books', bookRouter);
+app.use('/api/v1/reservations', reservationRouter);
 app.use('/api/v1/users', userRouter);
 
 app.all('*', (req, res, next) => {

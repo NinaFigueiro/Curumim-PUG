@@ -1,7 +1,15 @@
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const factory = require('./../controllers/handlerFactory');
 // const APIFeatures = require('./../utils/apiFeatures');
+
+// ONLY IF USING HANDLER FACTORY
+// exports.getUser = factory.getOne(User);
+// exports.createUser = factory.createOne(User);
+// exports.updateUser = factory.updateOne(User);
+// exports.deleteUser = factory.deleteOne(User);
+// 
 
 const filterObj = (obj, ...allowedFields) => {
     const newObj = {};
@@ -25,8 +33,8 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
 exports.approveUser = catchAsync(async (req, res, next) => {
     const approvedUser = await User.findByIdAndUpdate(req.params.id, {approvedUser: true});
-    console.log('selectedUser', req.params.id);
-    console.log('loggedInUser', req.user.id);
+    // console.log('selectedUser', req.params.id);
+    // console.log('loggedInUser', req.user.id);
     res.status(200).json({
         status: 'success',
         data: approvedUser

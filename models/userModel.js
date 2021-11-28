@@ -50,7 +50,12 @@ const userSchema = new mongoose.Schema({
         default: true,
         select: false
     }
-});
+},
+{
+    toJSON: {virtuals: true },
+    toObject: {virtuals: true },
+}
+);
 
 // Encrypting password
 userSchema.pre('save', async function(next) {
@@ -102,7 +107,7 @@ userSchema.methods.createPasswordResetToken = function() {
         .createHash('sha256')
         .update(resetToken)
         .digest('hex');
-    console.log({resetToken}, this.passwordResetToken);
+    // console.log({resetToken}, this.passwordResetToken);
     this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
     
     return resetToken;

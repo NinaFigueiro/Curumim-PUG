@@ -1,0 +1,141 @@
+const Book = require('./../models/bookModel');
+const Reservation = require('./../models/reservationModel');
+const APIFeatures = require('./../utils/apiFeatures');
+const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
+const factory = require('./../controllers/handlerFactory');
+
+// ONLY IF USING HANDLER FACTORY
+exports.getReservation = factory.getOne(Reservation);
+// exports.createReservation = factory.createOne(Reservation);
+// exports.updateReservation = factory.updateOne(Reservation);
+// exports.deleteReservation = factory.deleteOne(Reservation);
+// 
+
+// BEFORE HANDLER FACTORY
+exports.getAllReservations = catchAsync(async(req, res, next) => {
+    let filter = {};
+    if(!req.query.sort) req.query.sort = 'createdAt';
+    if(req.params.bookId) filter = {book: req.params.bookId}
+    const reservations = await Reservation.find(filter);
+
+    res.status(200).json({
+        status: 'success',
+        results: reservations.length,
+        data: {
+            reservations
+        }
+    })
+});
+
+// MAybe add that only the reservation user or Super-User can delete the reservation
+exports.setBookUserIds = catchAsync(async (req, res, next) => {
+    // Allow nested routes
+    if(!req.body.book) req.body.book = req.params.bookId   
+    if(!req.body.user) req.body.user = req.user.id
+
+    const book = await Book.findById(req.params.bookId);
+    if(!(book.status === 'available')) {
+        return next(new AppError('This book is already reserved', 404))
+    }
+    await Book.findByIdAndUpdate(req.params.bookId, { status: 'reserved'});
+
+    next();
+});
+// MISSING ERROR HANDLER for when the book is already reserved
+exports.createReservation = catchAsync(async (req,res,next) => {
+   const newReservation = await Reservation.create(req.body);
+    
+    res.status(201).json({
+        status: 'success',
+        data: {
+            reservation: newReservation
+        }
+    })
+});
+
+exports.deleteReservation = catchAsync(async (req, res, next) => {
+    // we want to find a reservation which has our book id and logged in user
+    const reservation = await Reservation.findById(req.params.id);
+    console.log(req.params.id)
+    const book = await Book.findById(reservation.book);
+    if(!(book.status === 'reserved')) {
+        return next(new AppError('You can no longer cancel this reservation', 404))
+    }
+    // const reservation = await Reservation.find(req.params.id);
+    await Reservation.findOneAndDelete(req.params.id);
+    await Book.findByIdAndUpdate(reservation.book, { status: 'available'});
+    
+    if(!reservation) {
+        return next(new AppError('No reservation found with that ID', 404))
+    }
+
+    res.status(204).json({
+        status: 'success',
+        data: null
+    });
+});
+
+exports.cancelReservation = catchAsync(async (req, res, next) => {
+    // we want to find a reservation which has our book id and logged in user
+    const reservation = await Reservation.findOne({ book: req.params.bookId, user: req.user });
+    console.log(reservation.book)
+    
+    const book = await Book.findById(reservation.book);
+    if(!(book.status === 'reserved')) {
+        return next(new AppError('You can no longer cancel this reservation', 404))
+    }
+    // const reservation = await Reservation.find(req.params.id);
+    await Reservation.findOneAndDelete({ book: req.params.bookId, user: req.user });
+
+    if(book.status === 'reserved') {
+        await Book.findByIdAndUpdate(reservation.book, { status: 'available'});
+    }
+    
+    if(!reservation) {
+        return next(new AppError('No reservation found with that ID', 404))
+    }
+
+
+    res.status(204).json({
+        status: 'success',
+        data: null
+    });
+});
+
+exports.setBorrowed = catchAsync(async (req,res,next) => {
+    const reservation = await Reservation.findById(req.params.id);
+    if(reservation.borrowedAt) {
+        return next(new AppError('This reservation is already set to borrowed', 404))
+    }
+    const updatedReservation = await Reservation.findByIdAndUpdate(req.params.id, {borrowedAt: Date.now()});
+
+    await Book.findByIdAndUpdate(reservation.book, {status: 'borrowed'});
+
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            updatedReservation
+        }
+    });
+});
+
+exports.setReturned = catchAsync(async (req,res,next) => {
+    const reservation = await Reservation.findById(req.params.id);
+    if(reservation.returnedAt || !reservation.borrowedAt) {
+        return next(new AppError('This reservation has already been finalized or has not been borrowed to user yet', 404))
+    }
+    await Reservation.findByIdAndUpdate(req.params.id, {returnedAt: Date.now()});
+    
+    await Book.findByIdAndUpdate(reservation.book, {status: 'available'});
+    
+    res.status(200).json({
+        status: 'success',
+        data: {
+            reservation
+        }
+    });
+});
+
+
