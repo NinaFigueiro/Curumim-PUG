@@ -60,7 +60,7 @@ exports.deleteReservation = catchAsync(async (req, res, next) => {
     console.log(req.params.id)
     const book = await Book.findById(reservation.book);
     if(!(book.status === 'reserved')) {
-        return next(new AppError('You can no longer cancel this reservation', 404))
+        return next(new AppError('This reservation is already borrowed and cannot be cancelled', 404))
     }
     // const reservation = await Reservation.find(req.params.id);
     await Reservation.findOneAndDelete(req.params.id);
@@ -138,4 +138,17 @@ exports.setReturned = catchAsync(async (req,res,next) => {
     });
 });
 
+exports.myReservations = catchAsync(async (req,res,next) => {
+    // const user = req.user
+    // console.log(user)
+    const reservations = await Reservation.find({ user: req.user });
+    
+    
+    res.status(200).json({
+        status: 'success',
+        data: {
+            reservations
+        }
+    });
+});
 

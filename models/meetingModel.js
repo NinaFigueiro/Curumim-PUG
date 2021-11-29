@@ -12,7 +12,8 @@ const meetingSchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
+        select: false
     },
     summary: {
         type: String,
@@ -36,6 +37,8 @@ const meetingSchema = new mongoose.Schema({
     toObject: {virtuals: true },
 }
 );
+
+meetingSchema.index({date: 1});
 
 const Meeting = mongoose.model('Meeting', meetingSchema);
 

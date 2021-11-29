@@ -39,11 +39,17 @@ exports.signup = catchAsync(async(req, res, next) => {
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
         // REMOVE IT (have it only in createUser)
-        passwordChangedAt: req.body.passwordChangedAt,
-        role: req.body.role
+        // passwordChangedAt: req.body.passwordChangedAt,
+        // role: req.body.role
     });
     
-    createSendToken(newUser, 201, res);    
+    // createSendToken(newUser, 201, res);    
+    res.status(201).json({
+        status: 'success',
+        data: {
+            newUser
+        }
+    });
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -59,6 +65,10 @@ exports.login = catchAsync(async (req, res, next) => {
 
     if(!user || !(await user.correctPassword(password, user.password))) {
         return next(new AppError('Incorrect email or password', 401))
+    }
+
+    if(!user.approvedUser) {
+        return next(new AppError('This user is not approved yet', 404))
     }
 
     // 3) If everything ok, send token to client

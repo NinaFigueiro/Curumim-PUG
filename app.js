@@ -10,8 +10,9 @@ const hpp = require('hpp');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const bookRouter = require('./routes/bookRoutes');
-const userRouter = require('./routes/userRoutes');
 const reservationRouter = require('./routes/reservationRoutes');
+const meetingRouter = require('./routes/meetingRoutes');
+const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
@@ -67,6 +68,7 @@ app.use((req, res, next) => {
 //  3) ROUTES
 app.use('/api/v1/books', bookRouter);
 app.use('/api/v1/reservations', reservationRouter);
+app.use('/api/v1/meetings', meetingRouter);
 app.use('/api/v1/users', userRouter);
 
 app.all('*', (req, res, next) => {

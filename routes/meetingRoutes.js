@@ -4,18 +4,31 @@ const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
+router.route('/nextMeeting').get(meetingController.getNextMeeting);
 
-router.route('/:month/:year').get(meetingController.getMeetingsPerMonth);
+// gets yearly and monthly meetings from current year
+router.route('/callendarYear').get(meetingController.getMeetingsPerYear);
+router.route('/callendarYear/:month').get(meetingController.getMeetingsPerMonth);
+// gets yearly and monthly meetings from queried year
+router.route('/selectedYear/:year').get(meetingController.getMeetingsPerYear);
+router.route('/selectedYear/:year/:month').get(meetingController.getMeetingsPerMonth);
 
-// router
-//   .route('/')
-//   .get(authController.protect, bookController.getAllBooks)
-//   .post(bookController.createBook);
+// User has to be logged in:
+router.use(authController.protect);
 
-// router
-//   .route('/:id')
-//   .get(bookController.getBook)
-//   .patch(bookController.updateBook)
-//   .delete(authController.protect, authController.restrictTo('admin', 'super-user'), bookController.deleteBook);
+router.route('/:id').get(meetingController.getMeeting);
+
+// User has to be ADMIN or SUPER-USER:
+router.use(authController.restrictTo('admin', 'super-user'));
+
+router
+  .route('/')
+  .get(meetingController.getAllMeetings)
+  .post(meetingController.createMeeting);
+
+router
+  .route('/:id')
+  .patch(meetingController.updateMeeting)
+  .delete(meetingController.deleteMeeting);
 
 module.exports = router;

@@ -6,6 +6,8 @@ const reservationRouter = require('./../routes/reservationRoutes');
 
 const router = express.Router();
 
+router.use('/:bookId/reservations', reservationRouter);
+
 router.route('/available').get(bookController.aliasBooksAvailable, bookController.getAllBooks);
 router.route('/reserved').get(bookController.aliasBooksReserved, bookController.getAllBooks);
 router.route('/borrowed').get(bookController.aliasBooksBorrowed, bookController.getAllBooks);
@@ -13,17 +15,18 @@ router.route('/borrowed').get(bookController.aliasBooksBorrowed, bookController.
 // Create Reservation on Book DELETE
 // router.route('/:bookId/reservations').post(authController.protect, reservationController.createReservation);
 
-router.use('/:bookId/reservations', reservationRouter);
+router.route('/').get(bookController.getAllBooks);
 
-router
-  .route('/')
-  .get(bookController.getAllBooks)
-  .post(authController.protect, authController.restrictTo('admin', 'super-user'),  bookController.createBook);
+// User has to be logged in:
+router.use(authController.protect);
 
-router
-  .route('/:id')
-  .get(bookController.getBook)
-  .patch(bookController.updateBook)
-  .delete(authController.protect, authController.restrictTo('admin', 'super-user'), bookController.deleteBook);
+router.route('/:id').get(bookController.getBook);
+
+// User has to be ADMIN or SUPER-USER:
+router.use(authController.restrictTo('admin', 'super-user'));
+
+router.route('/').post(bookController.createBook);
+
+router.route('/:id').patch(bookController.updateBook).delete(bookController.deleteBook);
 
 module.exports = router;

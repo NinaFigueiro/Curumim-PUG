@@ -7,6 +7,8 @@ const router = express.Router({ mergeParams: true });
 // User has to be logged in
 router.use(authController.protect);
 
+router.route('/myReservations').get(reservationController.myReservations);
+
 router.route('/').post(reservationController.setBookUserIds, reservationController.createReservation);
 // router.route('/:bookId').post(authController.protect, reservationController.createReservation);
 router.route('/:id').delete(reservationController.deleteReservation);
