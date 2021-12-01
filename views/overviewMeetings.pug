@@ -1,0 +1,29 @@
+extends base
+block content 
+
+    <main class="main">
+        <div class="pageContainer">
+        <div class="pageHeader bg-green">
+            <h1>Meetings</h1>
+        </div>
+        <div class="library-container">
+            each meeting in meetings
+                <div class="card livroCard">
+                    //- <img class="bibliotecaImg" src="" alt="Book img">
+                    //- <img class="bibliotecaImg" src="" alt="Book img">
+                    img.bibliotecaImg(src=`${meeting.img}`, alt=`${meeting.name}`)
+                    <div class="card-body">
+                    //- <h6 class="card-title">meeting name</h6> 
+                    h6.card-title= meeting.name 
+                    //- <p class="card-text">meeting author</p>
+                    p.card-text= meeting.author
+                    p.card-text= meeting.date.toLocaleString('pt-br', {day: 'numeric', month: 'numeric', year: 'numeric'})
+                    p.card-text= meeting.summary
+
+                    </div>
+                    //- <a class="btn btn--green span-all-rows mg-bt-1" href="">Details</a>                  
+                    a.btn.btn--green.span-all-rows.mg-bt-1(href=`/overviewMeetings/${meeting.id}`) Details              
+                </div>
+        </div>
+        </div>
+    </main>

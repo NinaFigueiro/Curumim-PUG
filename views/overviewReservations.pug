@@ -1,0 +1,25 @@
+extends base
+block content 
+
+    <main class="main">
+        <div class="pageContainer">
+        <div class="pageHeader bg-green">
+            <h1>Reservations</h1>
+        </div>
+        <div class="library-container">
+            each reservation in reservations
+                <div class="card livroCard">
+                    //- <img class="bibliotecaImg" src="" alt="Book img">
+                    //- <img class="bibliotecaImg" src="" alt="Book img">
+                    img.bibliotecaImg(src=`${reservation.book.img}`, alt=`${reservation.book}`)
+                    <div class="card-body">
+                    //- <h6 class="card-title">reservation name</h6> 
+                    h6.card-title= reservation.book 
+                    //- <p class="card-text">reservation author</p>
+                    p.card-text= reservation.user
+                    </div>
+                    <a class="btn btn--green span-all-rows mg-bt-1" href="">Reserve</a>                  
+                </div>
+        </div>
+        </div>
+    </main>

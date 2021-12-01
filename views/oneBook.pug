@@ -1,0 +1,25 @@
+extends base
+block content 
+
+    <main class="main">
+        <div class="pageContainer">
+            <div class="pageHeader bg-green">
+                <h1>Library</h1>
+            </div>
+            <div class="library-container">
+                <div class="card livroCard">
+                    //- <img class="bibliotecaImg" src="" alt="Book img">
+                    //- <img class="bibliotecaImg" src="" alt="Book img">
+                    img.bibliotecaImg(src=`${book.img}`, alt=`${book.name}`)
+                    <div class="card-body">
+                    //- <h6 class="card-title">Book name</h6> 
+                    h6.card-title= book.name 
+                    //- <p class="card-text">Book author</p>
+                    p.card-text= book.author
+                    </div>
+                    <a class="btn btn--green span-all-rows mg-bt-1" href="">Reserve</a>                  
+                </div>
+            </div>
+        </div>
+    </main>
+    

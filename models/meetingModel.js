@@ -8,8 +8,10 @@ const meetingSchema = new mongoose.Schema({
         trim: true
     },
     img: {
-        type: String
-    },
+        type: String,
+        default: '/img/meeting.png'
+    }, 
+    age: String,
     createdAt: {
         type: Date,
         default: Date.now(),

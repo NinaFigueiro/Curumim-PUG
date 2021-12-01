@@ -1,0 +1,84 @@
+extends base
+
+block content 
+    <main class="main">
+        <div class="pageContainer">
+            <div class="pageHeader bg-green">
+                h1= meeting.name
+            </div>
+            <div class="card mb-3 p-3">
+                img.bibliotecaImg(src=`/${meeting.img}`, alt=`${meeting.name}`)
+                //- h3.card-title= meeting.name
+                .atividade-info 
+                    .atividades-properties
+                        label Date:
+                        p.card-text= `${meeting.date.toLocaleString('pt-br', {day:'numeric', month: 'numeric', year: 'numeric'})} at ${meeting.time}`
+                    .atividades-properties
+                        label Place:
+                        p.card-text= meeting.place
+                    .atividades-description
+                        - const parapraphsA = meeting.summary.split('\n');
+                        each p in parapraphsA
+                            p.description__text= p
+                    .atividades-description
+                        - const parapraphsB = meeting.description.split('\n');
+                        each p in parapraphsB
+                            p.description__text= p
+                    a.btn.btn-yellow.fontWhite(href=`${meeting.formlink}`) Participate
+                    
+                    //- .atividades-properties
+                    //-     label Local:
+                    //-     p.card-text= meeting.place
+            </div>
+
+            //- <div class="card mb-3 p-3">
+            //-     <div class="row g-0">
+            //-         <div class="col-md-4">
+            //-             img.bibliotecaImg(src=`/${meeting.img}`, alt=`${meeting.name}`)
+            //-         </div>
+            //-         <div class="col-md-8">
+            //-             <div class="card-body">
+            //-                 h3.card-title= meeting.name
+            //-                 .atividade-info 
+            //-                     .atividades-description
+            //-                         - const parapraphsA = meeting.summary.split('\n');
+            //-                         each p in parapraphsA
+            //-                             p.description__text= p
+            //-                     .atividades-properties
+            //-                         label Data:
+            //-                         p.card-text= `${meeting.date.toLocaleString('pt-br', {day:'numeric', month: 'numeric', year: 'numeric'})} às ${meeting.time}`
+            //-                     .atividades-description
+            //-                         - const parapraphs = meeting.description.split('\n');
+            //-                         each p in parapraphs
+            //-                             p.description__text= p
+            //-                     //- .atividades-properties
+            //-                     //-     label Local:
+            //-                     //-     p.card-text= meeting.place
+            //-                     .atividades-description
+            //-                         - const parapraphs = meeting.description.split('\n');
+            //-                         each p in parapraphs
+            //-                             p.description__text= p
+            //-                     a.btn.btn-yellow.fontWhite(href=`${meeting.formlink}`) Confirmar presença
+                            //- h6(class="centerX font02")= `${atividade.date.toLocaleString('pt-br', {day:'numeric', month: 'numeric', year: 'numeric'})} às ${atividade.time}`
+                            //- - const parapraphsA = atividade.summary.split('\n');
+                            //- each p in parapraphsA
+                            //-     p.description__text= p
+                            //- - const parapraphs = atividade.description.split('\n');
+                            //- each p in parapraphs
+                            //-     p.description__text= p
+                            //- p= atividade.description
+                        </div>
+                    </div>
+                </div>  
+                <div class="col-md-12">
+                    //- img.bibliotecaImg(src=`/${meeting.img}`, alt=`${meeting.name}`)
+                    //- a.btn.btn-yellow.fontWhite(href=`${meeting.formlink}`) Confirmar presença
+                    //- <a class="btn btn-yellow fontWhite" href="https://forms.gle/Si45BkrWSbGxc32K8" target="_blank">Confirmar presença</a>
+                </div>  
+            </div>
+        </div>
+                
+        </div>
+        
+    </main>
+    

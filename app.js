@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -13,10 +14,20 @@ const bookRouter = require('./routes/bookRoutes');
 const reservationRouter = require('./routes/reservationRoutes');
 const meetingRouter = require('./routes/meetingRoutes');
 const userRouter = require('./routes/userRoutes');
+const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
 
+// FRONTEND
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+// 
+
 // 1) GLOBAL MIDDLEWARES
+
+// Serving static files
+// app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(__dirname, 'public' )));
 
 // Set security HTTP headers
 // You can have a look at helmet package in github.com/helmetjs/helmet
@@ -54,9 +65,6 @@ app.use(xss());
 // );
 app.use(hpp());
 
-// Serving static files
-app.use(express.static(`${__dirname}/public`));
-
 // Test middleware
 app.use((req, res, next) => {
     req.requestTime = new Date().toISOString();
@@ -66,6 +74,8 @@ app.use((req, res, next) => {
 })
 
 //  3) ROUTES
+
+app.use('/', viewRouter);
 app.use('/api/v1/books', bookRouter);
 app.use('/api/v1/reservations', reservationRouter);
 app.use('/api/v1/meetings', meetingRouter);

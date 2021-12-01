@@ -15,8 +15,9 @@ const bookSchema = new mongoose.Schema({
         trim: true
     },
     img: {
-        type: String
-    },
+        type: String,
+        default: '/img/book.png'
+    }, 
     status: {
         type: String,
         enum: {

@@ -1,0 +1,159 @@
+:root {
+  --primary-color: #28a745;
+  --secondary-color: #f9cb00;
+  --yellow-color: rgb(255, 217, 0);
+  --light-color: #f3f3f3;
+  --dark-color: #333;
+  --max-width: 1100;
+  --menu-speed: 0.75s;
+  --full-page: 90vh;
+  --nav-hight: 10vh;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  width: 100%;
+  margin: 0;
+}
+body {
+  font-family: "Open Sans", sans-serif;
+  line-height: 1.5;
+  background: var(--light-color);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  font-weight: 300;
+  color: #777;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+a,
+li {
+  color: #333;
+  text-decoration: none;
+}
+
+span a {
+  color: #24963f;
+  font-weight: bolder;
+}
+
+ul {
+  list-style: none;
+}
+
+p {
+  text-align: justify;
+  /* text-justify: inter-word; */
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
+
+input {
+  padding: 5px;
+  border: #f5f5f5 1px solid;
+}
+input:focus {
+  outline-color: #28a745;
+}
+
+/********************************************************************/
+/********************************************************************/
+/******************************* GENERAL ****************************/
+/********************************************************************/
+/********************************************************************/
+
+/* NAVIGATION */
+/* BOOTSTRAP NAV */
+.navbar {
+  padding: 0;
+  z-index: 3;
+  position: fixed;
+  width: 100%;
+  min-height: 60px;
+}
+.navMenu {
+  background: var(--secondary-color);
+  height: 100%;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+  min-height: 60px;
+}
+.navItems {
+  align-items: center;
+  display: flex;
+  margin: auto;
+}
+
+.navItems li a {
+  color: #24963f;
+}
+
+/* unsucessfull attempts */
+span.navbar-toggler-icon,
+span.navbar-toggler-icon > *,
+.navbar-light .navbar-toggler > *,
+.navbar-light .navbar-toggler {
+  color: #24963f;
+  border-color: #24963f;
+}
+
+button.navbar-toggler > * > * {
+  color: #24963f;
+}
+
+/*  */
+nav.nav {
+  background: #fff;
+  position: fixed;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  background: var(--yellow-color);
+  height: 60px;
+  justify-content: space-between;
+}
+
+.nav a,
+.nav li {
+  color: #24963f;
+}
+
+.nav .logo {
+  height: 110px;
+  width: 140px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: 0.4rem;
+  margin-left: 0.8rem;
+  border-radius: 50%;
+  border: var(--primary-color) solid 3px;
+}
+/* bootstrap change (used to be like the above) */
+.logo {
+  height: 110px;
+  width: 140px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: 0.4rem;
+  margin-left: 0.8rem;
+  border-radius: 50%;
+  border: var(--primary-color) solid 3px;
+  z-index: 3;
+}
