@@ -300,13 +300,16 @@ img.arte {
 .btnCenter {
   align-self: center;
 }
-
+.editBtn:hover,
 .btn:hover {
   -webkit-transform: translateY(-3px);
   transform: translateY(-3px);
   -webkit-box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
   color: #fff;
+}
+.editBtn:hover {
+  background-color: #24963f;
 }
 
 .btnHoverWhite:hover {
@@ -1067,8 +1070,8 @@ button.navbar-toggler > * > * {
   margin-top: 1rem;
   margin-bottom: 1rem;
   display: grid;
-  grid-gap: 2rem;
   grid-template-columns: repeat(4, 1fr);
+  grid-gap: 2rem;
 }
 
 .library-container > * {
@@ -1761,7 +1764,25 @@ p.atividade-date {
 
 /* CURUMIM */
 
-
+.editBtn {
+  font-size: 0.6rem;
+  /* padding: 1rem; */
+  width: 40%;
+  margin: auto;
+  margin-bottom: 1rem;
+  border-radius: 1rem;
+  display: inline-block;
+  text-decoration: none;
+  position: relative;
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+  font-weight: bolder;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  /*Add later when we use this for the button in form*/
+  border: #24963f solid 1px;
+  cursor: pointer;
+}
 
 /********************************************************************/
 /********************************************************************/

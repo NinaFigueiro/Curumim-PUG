@@ -24,7 +24,12 @@ block content
                         - const parapraphsB = meeting.description.split('\n');
                         each p in parapraphsB
                             p.description__text= p
-                    a.btn.btn-yellow.fontWhite(href=`${meeting.formlink}`) Participate
+
+                    if (meeting.date >= Date.now())
+                        a.btn.btn-yellow.fontWhite(href=`${meeting.formlink}`) Participate 
+                    else                
+                        .atividades-description.fontRed You can't sign up for this meeting anymore either because the starting date is too close or becauser the meeting has already happended.
+                    
                     
                     //- .atividades-properties
                     //-     label Local:

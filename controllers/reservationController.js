@@ -31,10 +31,13 @@ exports.getAllReservations = catchAsync(async(req, res, next) => {
 // MAybe add that only the reservation user or Super-User can delete the reservation
 exports.setBookUserIds = catchAsync(async (req, res, next) => {
     // Allow nested routes
-    if(!req.body.book) req.body.book = req.params.bookId   
-    if(!req.body.user) req.body.user = req.user.id
-
     const book = await Book.findById(req.params.bookId);
+
+    if(!req.body.bookId) req.body.bookId = book.id
+    if(!req.body.bookName) req.body.bookName = book.name   
+    if(!req.body.bookAuthor) req.body.bookAuthor = book.author   
+    if(!req.body.userName) req.body.userName = req.user.name
+
     if(!(book.status === 'available')) {
         return next(new AppError('This book is already reserved', 404))
     }
@@ -58,7 +61,7 @@ exports.deleteReservation = catchAsync(async (req, res, next) => {
     // we want to find a reservation which has our book id and logged in user
     const reservation = await Reservation.findById(req.params.id);
     console.log(req.params.id)
-    const book = await Book.findById(reservation.book);
+    const book = await Book.findById(reservation.bookId);
     if(!(book.status === 'reserved')) {
         return next(new AppError('This reservation is already borrowed and cannot be cancelled', 404))
     }
@@ -69,33 +72,6 @@ exports.deleteReservation = catchAsync(async (req, res, next) => {
     if(!reservation) {
         return next(new AppError('No reservation found with that ID', 404))
     }
-
-    res.status(204).json({
-        status: 'success',
-        data: null
-    });
-});
-
-exports.cancelReservation = catchAsync(async (req, res, next) => {
-    // we want to find a reservation which has our book id and logged in user
-    const reservation = await Reservation.findOne({ book: req.params.bookId, user: req.user });
-    console.log(reservation.book)
-    
-    const book = await Book.findById(reservation.book);
-    if(!(book.status === 'reserved')) {
-        return next(new AppError('You can no longer cancel this reservation', 404))
-    }
-    // const reservation = await Reservation.find(req.params.id);
-    await Reservation.findOneAndDelete({ book: req.params.bookId, user: req.user });
-
-    if(book.status === 'reserved') {
-        await Book.findByIdAndUpdate(reservation.book, { status: 'available'});
-    }
-    
-    if(!reservation) {
-        return next(new AppError('No reservation found with that ID', 404))
-    }
-
 
     res.status(204).json({
         status: 'success',

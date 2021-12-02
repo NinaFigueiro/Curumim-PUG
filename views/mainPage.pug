@@ -1,0 +1,101 @@
+extends base
+block content 
+
+    <main class="main mainPage" >
+        <div class="main-container">
+            <div class="showcase">
+                <div class="card welcome-card">
+                    <h2 class="fontWhite">Bem vindo à <br>Brasileirinhos-DK</h2>
+                    <p class="fontWhite">A Associação Brasileirinhos-Dk é um lindo projeto que promove encontros infantis trazendo um pouco da nossa cultura brasileira aos  nossos brasileirinhos em Copenhagen-DK. A associação promove um contato maior com a língua portuguesa, através de oficinas, workshops, festas tradicionais e muito mais.<br> Venha fazer parte da nossa turma!</p>
+                    <a class="btn btnHoverWhite btnCenter btn-yellow fontWhite font02" href="/inscricoes">Inscreva-se</a>
+                </div>
+            </div>
+            <div class="ressource bg-red">
+                <h4 class="rowTitle centerX font02">Próximo evento:</h4>
+                each meeting in meetings
+                    
+                    <div class="nextEventCard">
+                        <div class="card mb-3" style="max-width: 800px;">
+                            <div class="row g-0">
+                                <div class="col-md-5 nextEventCardImg">
+                                    img.img-fluid.rounded-start.nextAtImg(src= meeting.img)
+                                </div>
+                                <div class="col-md-7 nextEventCardBody">
+                                    <div class="card-body">
+                                        h6.card-title.fontGreen= meeting.name
+                                        //- h6.card-title.fontGreen= meeting.subtext
+                                        p.atividade-date.fontGreen= `${meeting.date.toLocaleString('pt-br', {day:'numeric', month: 'numeric', year: 'numeric'})} às ${meeting.time}`
+                                        - const parapraphsA = meeting.summary.split('\n');
+                                        each p in parapraphsA
+                                            p.description__text= p
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>   
+                //- <p class="flex-center p-1">Confira todas as atividades no nosso <span><a class="fontWhite font02" href="/atividades-mensais">Calendário Anual</a></span></p>
+                .calendarioAnual
+                    <p class="flex-center p-1">Confira todas as atividades no nosso </p>
+                    <a class="btn fontWhite font02 btnHoverWhite btn-yellow fontWhite" href="/atividades-mensais">Calendário Anual</a> 
+            </div>
+
+            <div class="row div2Col">
+                <div class="col-sm-6">
+                    <div class="card bg-green div2ColCard">
+                        <div class="card-body newsletter">
+                            <h4 class="card-title fontYellow font02">Newsletter</h4>
+                            <p class="card-text">Inscreva-se para receber notícias da Brasileirinhos-DK</p>
+                            form.form.flexDivs.form--newsletter(action='/sumbit-newsletter', method='POST')
+                                .form__group
+                                    label.form__label(for='name') Nome
+                                    input#name.form__input(type='text', required, name='name')
+                                .form__group
+                                    label.form__label(for='email') Email
+                                    input#email.form__input(type='text', placeholder='you@example.com', required,name='email')
+                                .form__group
+                                    button.btn.btn-yellow.fontWhite.mg-top-1 Enviar
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card bg-blue-G fontWhite div2ColCard">
+                        <div class="card-body siganos">
+                            <h5 class="card-title">Siga-nos!</h5>
+                            <div>
+                                <a class="btnLink icones" href="https://www.facebook.com/BrasileirinhosDk" target="_blank"><i class="fab fa-facebook fa-2x"></i></a>
+                                <a class="btnLink icones" href="https://www.instagram.com/brasileirinhosdk" target="_blank"><i class="fab fa-instagram fa-2x"></i></a>
+                                <a class="btnLink icones" href="https://www.youtube.com/channel/UCJrNlu5qglRlfCZsjjpcNvQ" target="_blank"><i class="fab fa-youtube fa-2x"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>                 
+        </div>
+    </main>
+    
+    //- <main class="main">
+    //-     <div class="pageContainer">
+    //-     <div class="pageHeader bg-green">
+    //-         <h1>Meetings</h1>
+    //-     </div>
+    //-     <div class="library-container">
+    //-         each meeting in meetings
+    //-             <div class="card livroCard">
+    //-                 //- <img class="bibliotecaImg" src="" alt="Book img">
+    //-                 //- <img class="bibliotecaImg" src="" alt="Book img">
+    //-                 img.bibliotecaImg(src=`${meeting.img}`, alt=`${meeting.name}`)
+    //-                 <div class="card-body">
+    //-                 //- <h6 class="card-title">meeting name</h6> 
+    //-                 h6.card-title= meeting.name 
+    //-                 //- <p class="card-text">meeting author</p>
+    //-                 p.card-text= meeting.author
+    //-                 p.card-text= meeting.date.toLocaleString('pt-br', {day: 'numeric', month: 'numeric', year: 'numeric'})
+    //-                 p.card-text= meeting.summary
+
+    //-                 </div>
+    //-                 //- <a class="btn btn--green span-all-rows mg-bt-1" href="">Details</a>                  
+    //-                 a.btn.btn--green.span-all-rows.mg-bt-1(href=`/overviewMeetings/${meeting._id}`) Details         
+    //-             </div>
+    //-     </div>
+    //-     </div>
+    //- </main>

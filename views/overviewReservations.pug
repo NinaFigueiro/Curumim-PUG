@@ -11,14 +11,17 @@ block content
                 <div class="card livroCard">
                     //- <img class="bibliotecaImg" src="" alt="Book img">
                     //- <img class="bibliotecaImg" src="" alt="Book img">
-                    img.bibliotecaImg(src=`${reservation.book.img}`, alt=`${reservation.book}`)
+                    //- img.bibliotecaImg(src=`${reservation.book}`, alt=`${reservation.book}`)
                     <div class="card-body">
-                    //- <h6 class="card-title">reservation name</h6> 
-                    h6.card-title= reservation.book 
-                    //- <p class="card-text">reservation author</p>
-                    p.card-text= reservation.user
+                        //- <h6 class="card-title">reservation name</h6> 
+                        h6.card-title= reservation.userName
+                        //- <p class="card-text">reservation author</p>
+                        p.card-text= reservation.bookName
+                        p.card-text= reservation.bookAuthor
+                        p.card-text= reservation.reservedAt.toLocaleString('pt-br', {day: 'numeric', month: 'numeric', year: 'numeric'})
                     </div>
-                    <a class="btn btn--green span-all-rows mg-bt-1" href="">Reserve</a>                  
+                    <a class="btn btn--green span-all-rows mg-bt-1" href="">Borrow</a>                  
+                    a.btn.btn--green.span-all-rows.mg-bt-1(href=`/setBorrowed/${reservation.id}`) Borrow              
                 </div>
         </div>
         </div>
