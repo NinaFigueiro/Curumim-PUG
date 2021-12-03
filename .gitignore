@@ -3,3 +3,4 @@ dev-data
 node_modules
 config.env
 .DS_Store
+.cache
