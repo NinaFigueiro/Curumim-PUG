@@ -12,16 +12,16 @@ const router = express.Router();
 
 // ADMINS / SUPER-USERS
 router.get('/overviewMeetings', authController.protect, authController.restrictTo('admin', 'super-user'), viewsController.getOverviewMeetings);
-router.get('/overviewBooks/:id', authController.protect, authController.restrictTo('admin', 'super-user'), viewsController.getBook);
+router.get('/manageBooks/:id', authController.protect, authController.restrictTo('admin', 'super-user'), viewsController.getBook);
 router.get('/overviewUsers', authController.protect, authController.restrictTo('admin', 'super-user'), viewsController.getOverviewUsers);
 
 router.get('/submit-book-data', authController.protect, authController.restrictTo('admin', 'super-user'), viewsController.updateBook);
 router.get('/overviewReservations', authController.protect, authController.restrictTo('admin', 'super-user'), viewsController.getOverviewReservations);
 
 router.get('/me', authController.protect, viewsController.getAccount);
-
-
-router.post('/sumbit-user-data', authController.protect, viewsController.updateUserData)
+router.get('/manageBooks', authController.protect, viewsController.getBook);
+// Test - this is a post but exception
+// router.post('/sumbit-user-data', authController.protect, viewsController.updateUserData)
 
 // For all users
 router.use(authController.isLoggedIn);

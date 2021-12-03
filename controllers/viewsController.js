@@ -59,7 +59,7 @@ exports.getBook = catchAsync(async (req, res) => {
         path:'reservations'
     });
     // 2) render template using data from 1)
-    res.status(200).render('oneBook', {
+    res.status(200).render('manageBook', {
         title: 'The Book',
         book
     });
@@ -121,25 +121,26 @@ exports.subscribeNewsletter = (req, res, next) => {
     console.log('NEWSLETTER ',req.body);
 };
 
-exports.updateUserData = catchAsync(async (req, res, next ) => {
-    // console.log('Updating', req.body);
-    // const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body,
-    // {
-    //     new: true,
-    //     runValidators: true
-    // });
-    const updatedUser = await User.findByIdAndUpdate(req.user.id, {
-        name: req.body.name,
-        email: req.body.email
-    },
-    {
-        new: true,
-        runValidators: true
-    });
+// This is when we Post without API
+// exports.updateUserData = catchAsync(async (req, res, next ) => {
+//     // console.log('Updating', req.body);
+//     // const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body,
+//     // {
+//     //     new: true,
+//     //     runValidators: true
+//     // });
+//     const updatedUser = await User.findByIdAndUpdate(req.user.id, {
+//         name: req.body.name,
+//         email: req.body.email
+//     },
+//     {
+//         new: true,
+//         runValidators: true
+//     });
 
-    res.status(200).render('account', {
-        title: 'My Account',
-        user: updatedUser
-    });
+//     res.status(200).render('account', {
+//         title: 'My Account',
+//         user: updatedUser
+//     });
 
-});
+// });
