@@ -39,22 +39,24 @@ exports.aliasBooksBorrowed= (req, res, next) => {
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
     if(!req.query.sort) req.query.sort = 'name';
-        // EXECUTE QUERY
-        const features = new APIFeatures(Book.find(), req.query)
-        .filter()
-        .sort()
-        .limitFields()
-        .paginate(0);
-        const books = await features.query;
+    
+    // EXECUTE QUERY
+    const features = new APIFeatures(Book.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate(0);
+    
+    const books = await features.query;
 
-        // SEND RESPONSE
-        res.status(200).json({
-            status: 'success',
-            results: books.length,
-            data: {
-                books
-            }
-        });
+    // SEND RESPONSE
+    res.status(200).json({
+        status: 'success',
+        results: books.length,
+        data: {
+            books
+        }
+    });
 });
 
 // PROTECTED RESTRICTED
@@ -89,21 +91,22 @@ exports.createBook = catchAsync(async (req, res, next) => {
 });
 
 exports.updateBook = catchAsync(async (req, res, next) => {
-        const book = await Book.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true
-        });
+    const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true
+    });
+    console.log('Backend req.body', req.body);
 
-        if(!book) {
-            return next(new AppError('No book found with that ID', 404))
+    if(!updatedBook) {
+        return next(new AppError('No book found with that ID', 404))
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            book: updatedBook
         }
-
-        res.status(200).json({
-            status: 'success',
-            data: {
-                book
-            }
-        });
+    });
 });
 
 exports.deleteBook = catchAsync(async (req, res, next) => {

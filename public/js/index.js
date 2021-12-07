@@ -5,11 +5,12 @@ import {updateBook} from './manageRessources';
 
 // DOM ELEMENTS
 const loginForm = document.querySelector('.form--login');
-const bookForm = document.querySelector('.form-book-data');
-const newsletterForm = document.querySelector('.form--newsletter');
+const bookDataForm = document.querySelector('.form-book-data');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const logOutBtn = document.querySelector('.nav__el--logout');
+
+const newsletterForm = document.querySelector('.form--newsletter');
 
 // VALUES
 
@@ -21,8 +22,7 @@ loginForm.addEventListener('submit', e => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    console.log(email, password)
-    login(email, password);
+    login(email, password)
 });
 
 if(newsletterForm)
@@ -30,7 +30,6 @@ newsletterForm.addEventListener('submit', e => {
     e.preventDefault();
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
-    console.log(email, name)
     // login(email, password);
 });
 
@@ -40,9 +39,13 @@ if(logOutBtn) logOutBtn.addEventListener('click', logout);
 if(userDataForm)
     userDataForm.addEventListener('submit', e => {
         e.preventDefault();
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        updateSettings({name, email}, 'data');
+        const form = new FormData();
+        form.append('name', document.getElementById('name').value);
+        form.append('email', document.getElementById('email').value);
+        form.append('img', document.getElementById('img').files[0]);
+
+        updateSettings(form, 'data');
+        console.log(form);
     });
 
 if(userPasswordForm)
@@ -60,12 +63,11 @@ if(userPasswordForm)
         document.getElementById('password-confirm').value = '';
     });
 
-if(bookForm)
-    bookForm.addEventListener('submit', e => {
+if(bookDataForm)
+    bookDataForm.addEventListener('submit', e => {
         e.preventDefault();
-        const {id} = e.target.dataset
+        const id = e.target.dataset.bookId;
         const name = document.getElementById('name').value;
         const author = document.getElementById('author').value;
-        updateBook(name, author, id);
-
+        updateBook({name, author}, id);
     });

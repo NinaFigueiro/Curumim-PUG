@@ -6,6 +6,7 @@ block content
             .user-view__content
                 .user-view__form-container
                     h2.heading-secondary.ma-bt-md Edit Book
+                    //- form.form.form-book-data(data-book-id=`${book.id}`)
                     form.form.form-book-data(data-book-id=`${book.id}`)
                         .form__group
                             label.form__label(for='name') Name
@@ -14,10 +15,11 @@ block content
                             label.form__label(for='author') Author
                             input#author.form__input(type='text', value=`${book.author}`, required)
                         .form__group.form__photo-upload
-                            img.form__user-photo(src=`/${book.img}`, alt='Book photo')
+                            img.form__user-photo(src=`${book.img}`, alt='Book photo')
                             a.btn-text(href='') Choose new photo
                         .form__group.right
-                            button.btn.btn--small.btn--green(data-book-id=`${book.id}`) Save changes
+                            button.btn.btn--small.btn--green Save changes
+                            //- button.btn.btn--small.btn--green#btn-update-book(data-book-id=`${book.id}`) Save changes
         </div>
     </main>
     

@@ -9,10 +9,18 @@ const AppError = require('./../utils/appError');
 
 exports.getOverviewBooks = catchAsync(async (req, res) => {
     // Get book data from collection
-    const books = await Book.find();
-
+    if(!req.query.sort) req.query.sort = 'name';
+    if(!req.query.page) req.query.page = '1';
+        // EXECUTE QUERY
+        const features = new APIFeatures(Book.find(), req.query)
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate(0);
+    // const page = req.query.page;
+    const books = await features.query;
+    console.log(req.query)
     // Build template
-    
 
     // Render that template using  book data from 1)
     res.status(200).render('overviewBooks', {
@@ -44,7 +52,7 @@ exports.getOverviewUsers = catchAsync(async (req, res) => {
 exports.getOverviewReservations = catchAsync(async (req, res) => {
     // Get book data from collection
     const reservations = await Reservation.find()
-    console.log('Reservations', reservations);
+    // console.log('Reservations', reservations);
     // Render template using  book data from
     res.status(200).render('overviewReservations', {
         title: 'Reservations',

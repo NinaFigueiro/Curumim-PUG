@@ -24,11 +24,10 @@ router.use(authController.restrictTo('admin', 'super-user'));
 router
   .route('/')
   .get(meetingController.getAllMeetings)
-  .post(meetingController.createMeeting);
-
+  .post(meetingController.uploadMeetingPhoto, meetingController.createMeeting);
 router
   .route('/:id')
-  .patch(meetingController.updateMeeting)
+  .patch(meetingController.uploadImages, meetingController.updateMeeting)
   .delete(meetingController.deleteMeeting);
 
 module.exports = router;

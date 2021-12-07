@@ -3,6 +3,59 @@ const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const factory = require('./../controllers/handlerFactory');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const aws = require('aws-sdk');
+const sharp = require('sharp');
+// const APIFeatures = require('./../utils/apiFeatures');
+
+aws.config.update ({
+    secretAccessKey: process.env.AWSSecretKey,
+    accessKeyId: process.env.AWSAccessKeyId
+});
+
+const s3 = new aws.S3();
+
+const multerMemoryStorage = multer.memoryStorage();
+
+const multerStorage = multerS3({
+    s3: s3,
+    bucket: 'curumim-v1',
+    acl: 'public-read',
+    metadata: (req, file, cb) => {
+        cb(null, { fieldName: file.fieldname});
+    },
+    key: (req, file, cb) => {
+        cb(null, `meeting-${req.user.id}-${Date.now().toString()}`)
+    }
+});
+
+const multerFilter = (req, file, cb) => {
+    if(file.mimetype.startsWith('image')) {
+        cb(null, true);
+    } else {
+        cb(new AppError('Not an image! Please upload only images.', 400), false);
+    }
+};
+
+const upload = multer({ 
+    storage: multerStorage,
+    fileFilter: multerFilter,
+    
+});
+
+
+// If only one img is to be uploaded:
+exports.uploadMeetingPhoto = upload.single('img');
+
+// If both one single img and a group of imgs is to be uploaded
+exports.uploadImages = upload.fields([
+    {name: 'img', maxCount: 1},
+    {name: 'images', maxCount: 20} 
+]);
+
+// // If only a group of imgs is to be uploaded:
+// upload.array('images', 5)
 
 // ONLY IF USING HANDLER FACTORY
 exports.getMeeting = factory.getOne(Meeting);

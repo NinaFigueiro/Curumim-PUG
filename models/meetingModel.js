@@ -10,7 +10,8 @@ const meetingSchema = new mongoose.Schema({
     img: {
         type: String,
         default: '/img/meeting.png'
-    }, 
+    },
+    images: [String],
     age: String,
     createdAt: {
         type: Date,
